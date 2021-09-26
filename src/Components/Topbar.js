@@ -7,40 +7,46 @@ const Topbar = () => {
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-
-
-  const [data, setData] = useState([])
-  const [formData, setFormData] = useState('')
-
-
-  const saveCourse = () => {
-    fetch('http://65.1.150.227:5000/api/Tests/add', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        name: formData, 
-      }),
+  
+  function setData(){
+    console.log({categoryName,categoryDescription,status});
+    
+    fetch('http://65.1.150.227:5000/api/Tests/add',{
+        method:'POST',
+        headers:{
+            'Accept':'application/json',
+            'Content-type':'application/json'
+        },
+        body:JSON.stringify({categoryName,categoryDescription,status})
+    }).then ((result)=>{
+        console.log("result",result)
     })
-      .then((res) => res.json())
-      .then((result) => setData(result.rows))
-      .catch((err) => console.log('error'))
-  }
+}
+const[categoryName,setCategoryName] = useState("");
+const[categoryDescription,setCategoryDescription]= useState("");
+const [status,setStatus] =useState(1);
 
-  const handleSubmit = (event) => {
-    event.preventDefault()
-    saveCourse() 
-  }
+function setData(){
+  console.log({categoryName,categoryDescription,status});
+  let data={categoryName,categoryDescription,status}
+  fetch('http://65.1.150.227:5000/api/Tests/add',{
+      method:'POST',
+      headers:{
+          'Accept':'application/json',
+          'Content-type':'application/json'
+      },
+      body:JSON.stringify({categoryName,categoryDescription,status})
+  }).then ((result)=>{
+      console.log("result",result)
+  })
+}
 
-  const handleChange = (event) => {
-    setFormData(event.target.value)
-  }
+
   return (
     <>
       <Navbar collapseOnSelect expand="lg" bg="" variant="">
         <Container>
-          <Navbar.Brand >My Courses</Navbar.Brand>
+          <Navbar.Brand ><strong>My Courses</strong></Navbar.Brand>
           <Button variant="primary" onClick={handleShow}>
         Add Courses
       </Button>
@@ -52,31 +58,34 @@ const Topbar = () => {
         keyboard={false}
       >
         <Modal.Header closeButton>
-          <Modal.Title>Modal title</Modal.Title>
+          <Modal.Title>Add Course</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-        <Form onSubmit={handleSubmit} >
-        <Form.Group className="mb-3" controlId="formBasicText">
-          <Form.Label>Category Name</Form.Label>
-          <Form.Control type="text" name="categoryName" required placeholder="Enter Category Name" onChange = {handleChange} />
-         
-        </Form.Group>
+        <div className="row">
+                <div className="form-group col-md-12">
+                <input type="text" className="form-control" name="categoryName"  value={categoryName} onChange={(e)=>{{setCategoryName(e.target.value)}}} placeholder="Enter Category Name"/> <br/><br/>
+                </div>
+                <div className="form-group col-md-12">       
+                <input type="text" className="form-control cat-desc" name="categoryDescription"  value={categoryDescription} onChange={(e)=>{{setCategoryDescription(e.target.value)}}} placeholder="Enter Category Description"/> <br/><br/>
+                </div>
+                <div className="form-group col-md-12"> 
+                <select name="status" className="form-control cat-desc" value={status} onChange={(e)=>{{setStatus(e.target.value)}}} >
+                  <option value="">--- Select Staus ---</option>
+                  <option value="1">Active</option>
+                  <option value="0">Inactive</option>
+                </select>  
+                <div className="form-group col-md-12 text-center"> 
+                <button type="submit" className="btn btn-primary mt-4 col-md-4" onClick={setData}>Submit</button>
+                </div>
 
-        <Form.Group className="mb-3" controlId="formBasicText">
-          <Form.Label>Category Description</Form.Label>
-          <Form.Control type="text" name="categoryDescription" required placeholder="Category Description" onChange = {handleChange} />
-        </Form.Group>
-        <Form.Group className="mb-3" controlId="formBasicSelect">
-          <select name="status" required className="form-control" onChange = {handleChange}>
-            <option value="">--- Select Staus ---</option>
-            <option value="1">Active</option>
-            <option value="0">Inactive</option>
-          </select>
-        </Form.Group>
-        <Button variant="primary" onSubmit={handleSubmit} type="submit">
-          Submit
-        </Button>
-      </Form>
+        </div>
+
+               
+          
+
+                
+            </div>
+   
         </Modal.Body>
    
       </Modal>
